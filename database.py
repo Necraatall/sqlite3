@@ -5,7 +5,11 @@ CREATE_BEANS_TABLE = "CREATE TABLE beans (id INTEGER PRIMARY KEY, name Text, met
 INSERT_BEAN = "INSERT INTO beans (name, method, rating) VALUES (?, ?, ?);"
 GET_ALL_BEANS = "SELECT * FROM beans;"
 GET_BEANS_BY_NAME = "SELECT * FROM beans WHERE name = ?;"
-
+GET_BEST_PREPARATION_FOR_BEAN = """
+SELECT * FROM beans
+WHERE NAME = ?
+ORDER BY rating DESC
+LIMIT 1;"""
 
 def connect():
     return sqlite3.connect("data.db")
@@ -25,3 +29,7 @@ def get_all_beans(connection):
 def get_beans_by_name (connection, name):
     with connection:
         return connection.execute(GET_BEANS_BY_NAME, (name, )).fetchall()
+
+def get_best_preparation_for_bean(connection, name):
+    with connection:
+        return connection.execute(GET_BEST_PREPARATION_FOR_BEAN, (name, )).fetchone()
